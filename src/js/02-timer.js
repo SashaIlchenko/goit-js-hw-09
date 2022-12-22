@@ -8,8 +8,7 @@ const days = document.querySelector('[data-days]');
 const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
-// console.dir(text);
-// let timerId = null;
+
 button.disabled = true;
 const options = {
     enableTime: true,
@@ -34,33 +33,47 @@ flatpickr(inputDate, options);
 button.addEventListener('click', onBtnClick);
 function onBtnClick() {
     setInterval(() => {
+        const currentDate = new Date();
         const selectedDate = new Date(inputDate.value);
-        const timer = convertMs(selectedDate - options.defaultDate);
-        setDataTime(timer);
+        const timer = convertMs(selectedDate - currentDate);
+        const formatDate = addLeadingZero(timer);
+        setDataTime(formatDate);
     }, 1000);
-}
+};
 function setDataTime(date) {
+
     days.textContent = date.days;
     hours.textContent = date.hours;
     minutes.textContent = date.minutes;
     seconds.textContent = date.seconds;
-}
+
+};
 
 function convertMs(ms) {
-    // Number of milliseconds per unit of time
+
     const second = 1000;
     const minute = second * 60;
     const hour = minute * 60;
     const day = hour * 24;
 
-    // Remaining days
+
     const days = Math.floor(ms / day);
-    // Remaining hours
+
     const hours = Math.floor((ms % day) / hour);
-    // Remaining minutes
+
     const minutes = Math.floor(((ms % day) % hour) / minute);
-    // Remaining seconds
+
     const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
     return { days, hours, minutes, seconds };
+};
+
+function addLeadingZero(value) {
+    const formatingDate = {
+        days: value.days.toString().padStart(2, '0'),
+        hours: value.hours.toString().padStart(2, '0'),
+        minutes: value.minutes.toString().padStart(2, '0'),
+        seconds: value.seconds.toString().padStart(2, '0'),
+    };
+    return formatingDate;
 };
