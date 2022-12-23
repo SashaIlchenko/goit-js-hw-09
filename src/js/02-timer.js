@@ -9,6 +9,8 @@ const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
 
+let timerId = null;
+
 button.disabled = true;
 const options = {
     enableTime: true,
@@ -31,12 +33,13 @@ flatpickr(inputDate, options);
 
 button.addEventListener('click', onBtnClick);
 function onBtnClick() {
-    setInterval(() => {
+    timerId = setInterval(() => {
         const currentDate = new Date();
         const selectedDate = new Date(inputDate.value);
         const timer = convertMs(selectedDate - currentDate);
         const formatDate = addLeadingZero(timer);
         setDataTime(formatDate);
+        stopTimer(timer);
     }, 1000);
 };
 function setDataTime(date) {
@@ -75,4 +78,12 @@ function addLeadingZero(value) {
         seconds: value.seconds.toString().padStart(2, '0'),
     };
     return formatingDate;
+};
+function stopTimer(date) {
+    const finishedDate = Object.values(date).every(value => value == 0);
+    if (finishedDate) {
+        clearInterval(timerId);
+        Notify.success('🥳🥳🥳🥳🥳🥳🥳🥳');
+    };
+
 };
